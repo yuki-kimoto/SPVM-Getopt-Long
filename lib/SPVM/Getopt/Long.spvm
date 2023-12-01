@@ -150,7 +150,10 @@ class Getopt::Long {
               if ($found_rule->type == Getopt::Long::Rule->TYPE_STRING) {
                 if ($is_array) {
                   my $current_values = (string[])$values_h->get($primary_name);
-                  $current_values->push($option_value);
+                  
+                  $current_values = Array->merge_string($current_values, [$option_value]);
+                  
+                  $current_values->set($current_values);
                 }
                 else {
                   $values_h->set($primary_name, $option_value);
@@ -161,7 +164,10 @@ class Getopt::Long {
                 
                 if ($is_array) {
                   my $current_values = (Int[])$values_h->get($primary_name);
-                  $current_values->push($optiosn_value_int);
+                  
+                  $current_values = Array->merge_object($current_values, [$optiosn_value_int]);
+                  
+                  $current_values->set($current_values);
                 }
                 else {
                   $values_h->set($primary_name, $optiosn_value_int);
@@ -172,7 +178,10 @@ class Getopt::Long {
                 
                 if ($is_array) {
                   my $current_values = (Double[])$values_h->get($primary_name);
-                  $current_values->push($optiosn_value_double);
+                  
+                  $current_values = Array->merge_object($current_values, [$optiosn_value_double]);
+                  
+                  $current_values->set($current_values);
                 }
                 else {
                   $values_h->set($primary_name, $optiosn_value_double);
