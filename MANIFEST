@@ -1,0 +1,13 @@
+.gitignore
+Changes
+lib/SPVM/Getopt/Long.pm
+lib/SPVM/Getopt/Long.spvm
+lib/SPVM/Getopt/Long/Rule.pm
+lib/SPVM/Getopt/Long/Rule.spvm
+LICENSE
+Makefile.PL
+MANIFEST			This list of files
+MANIFEST.SKIP
+README.md
+t/basic.t
+t/lib/SPVM/TestCase/Getopt/Long.spvm
