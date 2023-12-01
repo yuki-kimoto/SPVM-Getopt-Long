@@ -1,0 +1,32 @@
+# Copyright (c) 2023 Yuki Kimoto
+# MIT License
+
+class Getopt::Long::Rule {
+  allow Getopt::Long;
+  
+  # Enumerations
+  private enum {
+    TYPE_BOOL,
+    TYPE_STRING,
+    TYPE_INT,
+    TYPE_DOUBLE,
+  }
+  
+  # Fields
+  
+  has name : string;
+  
+  has primary_name : string;
+  
+  has type : int;
+  
+  has is_array : byte;
+  
+  # Class Methods
+  private static method new : Getopt::Long::Rule () {
+    my $self = Getopt::Long::Rule->new;
+    
+    return $self;
+  }
+  
+}

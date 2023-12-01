@@ -8,6 +8,7 @@ class Getopt::Long {
   use Regex;
   use Fn;
   use StringList;
+  use Getopt::Long::Rule;
   
   static method GetOptionsFromArray : string[] ($argv : string[], $values_out : Hash, $rules : string[]) {
     
@@ -17,6 +18,8 @@ class Getopt::Long {
       die "\$values_out must be defined.";
     }
     
+    my $rules_list = List->new(new Getopt::Long::Rule[0]);
+    
     for (my $i = 0; $i < $rules; $i++) {
       my $rule = $rules->[$i];
       
@@ -24,20 +27,55 @@ class Getopt::Long {
       
       if (my $match = $rule_re->match($rule)) {
         my $names_str = $match->cap1;
-        my $type = $match->cap2;
-        my $is_array = $match->cap3;
+        my $type_char = $match->cap2;
+        my $is_array_char = $match->cap3;
         
         my $names = Fn->split("|", $names_str);
         
         unless ($type eq "s" || $type eq "i" || $type eq "f") {
           die "The type \"$type\" in the rule \"\" is not available.";
         }
+        
+        my $rule = Getopt::Long::Rule->new;
+        
+        my $is_primary_name = 1;
+        
+        for my $name (@$names) {
+          $rule->{name} = $name;
+            
+          if ($is_primary_name) {
+            $rule->{primary_name} = $name;
+            
+            $is_primary_name = 0;
+          }
+          else {
+            $rule->{primary_name} = $rule->{primary_name};
+          }
+          
+          my $is_array = 0;
+          if ($is_array_char) {
+            $is_array = 1;
+          }
+          
+          $rule->is_array($is_array);
+          
+          my $type = Getopt::Long::Rule->TYPE_BOOL;
+          if $type_char eq "s") {
+            $type = Getopt::Long::Rule->TYPE_STRING;
+          }
+          elsif ($type_char eq "i") {
+            $type = Getopt::Long::Rule->TYPE_INT;
+          }
+          elsif ($type_char eq "f") {
+            $type = Getopt::Long::Rule->TYPE_DOUBLE;
+          }
+          
+          $rules_list->push($rule);
+        }
       }
       else {
         die "The rule \"$rule\" is invalid.";
       }
-      
-      
     }
   }
   
