@@ -10,7 +10,7 @@ class Getopt::Long {
   use StringList;
   use Getopt::Long::Rule;
   
-  static method GetOptionsFromArray : string[] ($argv : string[], $values_out : Hash, $rules : string[]) {
+  static method GetOptionsFromArray : string[] ($argv : string[], $values_out : Hash, $rule_strings : string[]) {
     
     my $argv_list = StringList->new($argv);
     
@@ -18,14 +18,21 @@ class Getopt::Long {
       die "\$values_out must be defined.";
     }
     
+    my $rules = &parse_rule_strings($rule_strings);
+    
+    
+  }
+  
+  parivate method parse_rule_strings : Getopt::Long::Rule[] ($rule_strings : string[]) {
+    
     my $rules_list = List->new(new Getopt::Long::Rule[0]);
     
-    for (my $i = 0; $i < $rules; $i++) {
-      my $rule = $rules->[$i];
+    for (my $i = 0; $i < $rule_strings; $i++) {
+      my $rule_string = $rule_strings->[$i];
       
       my $rule_re = Regex->new("^(\w+(?:\|\w+))*(?:=([\w])(\@)?)?$");
       
-      if (my $match = $rule_re->match($rule)) {
+      if (my $match = $rule_re->match($rule_string)) {
         my $names_str = $match->cap1;
         my $type_char = $match->cap2;
         my $is_array_char = $match->cap3;
@@ -77,6 +84,10 @@ class Getopt::Long {
         die "The rule \"$rule\" is invalid.";
       }
     }
+    
+    my $rules = $rules_list->to_array;
+    
+    return $rules;
   }
   
   # use Getopt::Long qw(:config posix_default no_ignore_case gnu_compat);
