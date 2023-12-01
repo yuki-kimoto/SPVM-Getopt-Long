@@ -6,36 +6,40 @@ class Getopt::Long {
   
   use Array;
   use Regex;
+  use Fn;
+  use StringList;
   
-  static method GetOptionsFromArray : string[] ($argv : string[], $name_value_pairs : object[]) {
+  static method GetOptionsFromArray : string[] ($argv : string[], $values_out : Hash, $rules : string[]) {
     
-    my $name_value_pairs_length = @$name_value_pairs;
+    my $argv_list = StringList->new($argv);
     
-    unless ($name_value_pairs_length % 2 == 0) {
-      die "The length of \$name_value_pairs must be even number.";
+    unless ($values_out) {
+      die "\$values_out must be defined.";
     }
     
-    for (my $i = 0; $i < $name_value_pairs_length; $i += 2) {
-      my $name = $name_value_pairs_length->[$i];
+    for (my $i = 0; $i < $rules; $i++) {
+      my $rule = $rules->[$i];
       
-      my $pair_number = ($i / 2) + 1;
+      my $rule_re = Regex->new("^(\w+(?:\|\w+))*(?:=([\w])(\@)?)?$");
       
-      unless ($name) {
-        die "The ${pair_number}th name of the \$name_value_pairs must be defined.";
+      if (my $match = $rule_re->match($rule)) {
+        my $names_str = $match->cap1;
+        my $type = $match->cap2;
+        my $is_array = $match->cap3;
+        
+        my $names = Fn->split("|", $names_str);
+        
+        unless ($type eq "s" || $type eq "i" || $type eq "f") {
+          die "The type \"$type\" in the rule \"\" is not available.";
+        }
       }
-      
-      unless ($name is_type string) {
-        die "The ${pair_number}th name of the \$name_value_pairs must be the string type.";
-      }
-      
-      my $value_ref = $name_value_pairs_length->[$i + 1];
-      
-      unless ($value_ref) {
-        die "The ${pair_number}th value reference of the \$name_value_pairs must be defined.";
+      else {
+        die "The rule \"$rule\" is invalid.";
       }
       
       
     }
-    
   }
+  
+  # use Getopt::Long qw(:config posix_default no_ignore_case gnu_compat);
 }
