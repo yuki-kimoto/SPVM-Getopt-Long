@@ -10,34 +10,17 @@ class Getopt::Long {
   use StringList;
   use Getopt::Long::Rule;
   
-  static method GetOptionsFromArray : string[] ($argv : string[], $values_out : Hash, $rule_strings : string[]) {
+  static method GetOptionsFromArray : string[] ($argv : string[], $values_h : Hash, $rule_strings : string[]) {
     
-    unless ($values_out) {
-      die "\$values_out must be defined.";
+    unless ($values_h) {
+      die "\$values_h must be defined.";
     }
     
     my $rules_h = &parse_rule_strings($rule_strings);
     
-    my $new_argv_list = StringList->new;
+    my $new_argv = &parse_argv($argv, $values_h, $rules_h);
     
-    my $argv_length = @$argv;
-    
-    for (my $argv_index = 0; $argv_index < $argv_length; $argv_index++) {
-      my $arg_name = $argv->[$argv_index];
-      
-      my $arg_name_re = Regex->new("--?(\w+)");
-      
-      if (my $match = $arg_name_re->match($arg_name)) {
-        
-        my $name = $mathc->cap1;
-        
-        
-        
-      }
-      else {
-        $new_argv_list->push($arg_name);
-      }
-    }
+    return $new_argv;
   }
   
   parivate method parse_rule_strings : Hash of Getopt::Long::Rule ($rule_strings : string[]) {
@@ -109,6 +92,116 @@ class Getopt::Long {
     }
     
     return $rules_h;
+  }
+  
+  private method parse_argv : string[] ($argv : string[], $values_h : Hash, $rules_h : Hash of Getopt::Long::Rule) {
+    my $new_argv_list = StringList->new;
+    
+    my $argv_length = @$argv;
+    
+    my $parse_start = 1;
+    
+    for (my $argv_index = 0; $argv_index < $argv_length; $argv_index++) {
+      my $argv_number = $argv_index + 1;
+      
+      if ($parse_start) {
+        my $argv = $argv->[$argv_index];
+        
+        unless ($argv) {
+          die "The ${argv_number}th argument of $argv must be defined.";
+        }
+        
+        my $is_option_start = 0;
+        
+        my $option_start_re = Regex->new("^--?");
+        
+        if ($option eq "--") {
+          $parse_start = 0;
+          next;
+        }
+        
+        my $option_re = Regex->new("--?(\w+)(?:=([\w\.\-]+))?");
+        
+        if (my $match = $option_re->match($argv)) {
+          
+          my $option_name = $match->cap1;
+          
+          my $option_value = $match->cap2;
+          
+          my $found_rule = (Getopt::Long::Rule)$rules_h->get($name);
+          
+          if ($found_rule) {
+            if ($found_rule->type == Getopt::Long::Rule->TYPE_BOOL) {
+              $values_h->set($primary_name, 1);
+            }
+            else {
+              unless ($option_value) {
+                if ($argv_index + 1 < $argv_length) {
+                  $option_value = $argv->[$argv_index + 1];
+                }
+              }
+              
+              unless ($option_value) {
+                die "The value of the option \"$option_name\" is not found.";
+              }
+              
+              my $is_array = $found_rule->is_array;
+              
+              if ($found_rule->type == Getopt::Long::Rule->TYPE_STRING) {
+                if ($is_array) {
+                  my $current_values = (string[])$values_h->get($primary_name);
+                  $current_values->push($option_value);
+                }
+                else {
+                  $values_h->set($primary_name, $option_value);
+                }
+              }
+              elsif ($found_rule->type == Getopt::Long::Rule->TYPE_INT) {
+                my $optiosn_value_int = Fn->to_int($option_value);
+                
+                if ($is_array) {
+                  my $current_values = (Int[])$values_h->get($primary_name);
+                  $current_values->push($optiosn_value_int);
+                }
+                else {
+                  $values_h->set($primary_name, $optiosn_value_int);
+                }
+              }
+              elsif ($found_rule->type == Getopt::Long::Rule->TYPE_DOUBLE) {
+                my $optiosn_value_double = Fn->to_int($option_value);
+                
+                if ($is_array) {
+                  my $current_values = (Double[])$values_h->get($primary_name);
+                  $current_values->push($optiosn_value_double);
+                }
+                else {
+                  $values_h->set($primary_name, $optiosn_value_double);
+                }
+              }
+              else {
+                die "Unexpected Error.";
+              }
+            }
+            
+            my $primary_name = $found_rule->{primary_name};
+            
+          }
+          else {
+            die "The option \"$option_name\" is unknown.";
+          }
+        }
+        else {
+          die "The option \"$option\" is invalid."
+        }
+      }
+      else {
+        $new_argv_list->push($arg_name);
+      }
+    }
+    
+    my $new_argv = $new_argv_list->to_array;
+    
+    return $new_argv;
   }
   
   # use Getopt::Long qw(:config posix_default no_ignore_case gnu_compat);
