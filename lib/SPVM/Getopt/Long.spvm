@@ -3,4 +3,39 @@
 
 class Getopt::Long {
   version "0.001";
+  
+  use Array;
+  use Regex;
+  
+  static method GetOptionsFromArray : string[] ($argv : string[], $name_value_pairs : object[]) {
+    
+    my $name_value_pairs_length = @$name_value_pairs;
+    
+    unless ($name_value_pairs_length % 2 == 0) {
+      die "The length of \$name_value_pairs must be even number.";
+    }
+    
+    for (my $i = 0; $i < $name_value_pairs_length; $i += 2) {
+      my $name = $name_value_pairs_length->[$i];
+      
+      my $pair_number = ($i / 2) + 1;
+      
+      unless ($name) {
+        die "The ${pair_number}th name of the \$name_value_pairs must be defined.";
+      }
+      
+      unless ($name is_type string) {
+        die "The ${pair_number}th name of the \$name_value_pairs must be the string type.";
+      }
+      
+      my $value_ref = $name_value_pairs_length->[$i + 1];
+      
+      unless ($value_ref) {
+        die "The ${pair_number}th value reference of the \$name_value_pairs must be defined.";
+      }
+      
+      
+    }
+    
+  }
 }
