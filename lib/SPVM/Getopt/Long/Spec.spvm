@@ -1,7 +1,7 @@
 # Copyright (c) 2023 Yuki Kimoto
 # MIT License
 
-class Getopt::Long::Rule {
+class Getopt::Long::Spec {
   allow Getopt::Long;
   
   # Enumerations
@@ -23,8 +23,8 @@ class Getopt::Long::Rule {
   has is_array : byte;
   
   # Class Methods
-  private static method new : Getopt::Long::Rule () {
-    my $self = Getopt::Long::Rule->new;
+  private static method new : Getopt::Long::Spec () {
+    my $self = Getopt::Long::Spec->new;
     
     return $self;
   }

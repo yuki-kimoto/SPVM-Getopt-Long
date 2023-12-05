@@ -8,55 +8,57 @@ class Getopt::Long {
   use Regex;
   use Fn;
   use StringList;
-  use Getopt::Long::Rule;
+  use Getopt::Long::Spec;
   
-  static method GetOptionsFromArray : string[] ($argv : string[], $values_h : Hash, $rule_strings : string[]) {
+  static method GetOptionsFromArray : string[] ($argv : string[], $values_h : Hash, $spec_strings : string[]) {
     
     unless ($values_h) {
       die "\$values_h must be defined.";
     }
     
-    my $rules_h = &parse_rule_strings($rule_strings);
+    my $specs_h = &parse_spec_strings($spec_strings);
     
-    my $new_argv = &parse_argv($argv, $values_h, $rules_h);
+    my $new_argv = &parse_argv($argv, $values_h, $specs_h);
     
     return $new_argv;
   }
   
-  parivate method parse_rule_strings : Hash of Getopt::Long::Rule ($rule_strings : string[]) {
+  private static method parse_spec_strings : Hash of Getopt::Long::Spec ($spec_strings : string[]) {
     
-    my $rules_h = Hash->new;
+    my $specs_h = Hash->new;
     
-    for (my $i = 0; $i < $rule_strings; $i++) {
-      my $rule_string = $rule_strings->[$i];
+    my $spec_strings_length = @$spec_strings;
+    
+    for (my $i = 0; $i < $spec_strings_length; $i++) {
+      my $spec_string = $spec_strings->[$i];
       
-      my $rule_re = Regex->new("^(\w+(?:\|\w+))*(?:=([\w])(\@)?)?$");
+      my $spec_re = Regex->new("^(\w+(?:\|\w+))*(?:=([\w])(\@)?)?$");
       
-      if (my $match = $rule_re->match($rule_string)) {
+      if (my $match = $spec_re->match($spec_string)) {
         my $names_str = $match->cap1;
         my $type_char = $match->cap2;
         my $is_array_char = $match->cap3;
         
         my $names = Fn->split("|", $names_str);
         
-        unless ($type eq "s" || $type eq "i" || $type eq "f") {
-          die "The type \"$type\" in the rule \"\" is not available.";
+        unless ($type_char eq "s" || $type_char eq "i" || $type_char eq "f") {
+          die "The type \"$type_char\" in the spec is not available.";
         }
         
-        my $rule = Getopt::Long::Rule->new;
+        my $spec = Getopt::Long::Spec->new;
         
         my $is_primary_name = 1;
         
         for my $name (@$names) {
-          $rule->{name} = $name;
+          $spec->{name} = $name;
             
           if ($is_primary_name) {
-            $rule->{primary_name} = $name;
+            $spec->{primary_name} = $name;
             
             $is_primary_name = 0;
           }
           else {
-            $rule->{primary_name} = $rule->{primary_name};
+            $spec->{primary_name} = $spec->{primary_name};
           }
           
           my $is_array = 0;
@@ -64,37 +66,37 @@ class Getopt::Long {
             $is_array = 1;
           }
           
-          $rule->is_array($is_array);
+          $spec->{is_array} = (byte)$is_array;
           
-          my $type = Getopt::Long::Rule->TYPE_BOOL;
-          if $type_char eq "s") {
-            $type = Getopt::Long::Rule->TYPE_STRING;
+          my $type = Getopt::Long::Spec->TYPE_BOOL;
+          if ($type_char eq "s") {
+            $type = Getopt::Long::Spec->TYPE_STRING;
           }
           elsif ($type_char eq "i") {
-            $type = Getopt::Long::Rule->TYPE_INT;
+            $type = Getopt::Long::Spec->TYPE_INT;
           }
           elsif ($type_char eq "f") {
-            $type = Getopt::Long::Rule->TYPE_DOUBLE;
+            $type = Getopt::Long::Spec->TYPE_DOUBLE;
           }
           
-          my $found_rule = $rules_h->get($name);
+          my $found_spec = $specs_h->get($name);
           
-          if ($found_rule) {
-            die "The option name "\$name\" is given twice.".
+          if ($found_spec) {
+            die "The option name \"$name\" must be given onece.";
           }
           
-          $rules_list_h->set($name => $rule);
+          $specs_h->set($name => $spec);
         }
       }
       else {
-        die "The rule \"$rule\" is invalid.";
+        die "The spec \"$spec_string\" is invalid.";
       }
     }
     
-    return $rules_h;
+    return $specs_h;
   }
   
-  private method parse_argv : string[] ($argv : string[], $values_h : Hash, $rules_h : Hash of Getopt::Long::Rule) {
+  private static method parse_argv : string[] ($argv : string[], $values_h : Hash, $specs_h : Hash of Getopt::Long::Spec) {
     my $new_argv_list = StringList->new;
     
     my $argv_length = @$argv;
@@ -102,10 +104,11 @@ class Getopt::Long {
     my $parse_start = 1;
     
     for (my $argv_index = 0; $argv_index < $argv_length; $argv_index++) {
+      my $argv = $argv->[$argv_index];
+      
       my $argv_number = $argv_index + 1;
       
       if ($parse_start) {
-        my $argv = $argv->[$argv_index];
         
         unless ($argv) {
           die "The ${argv_number}th argument of $argv must be defined.";
@@ -115,7 +118,7 @@ class Getopt::Long {
         
         my $option_start_re = Regex->new("^--?");
         
-        if ($option eq "--") {
+        if ($argv eq "--") {
           $parse_start = 0;
           next;
         }
@@ -128,10 +131,12 @@ class Getopt::Long {
           
           my $option_value = $match->cap2;
           
-          my $found_rule = (Getopt::Long::Rule)$rules_h->get($name);
+          my $found_spec = (Getopt::Long::Spec)$specs_h->get($option_name);
           
-          if ($found_rule) {
-            if ($found_rule->type == Getopt::Long::Rule->TYPE_BOOL) {
+          if ($found_spec) {
+            my $primary_name = $found_spec->{primary_name};
+            
+            if ($found_spec->{type} == Getopt::Long::Spec->TYPE_BOOL) {
               $values_h->set($primary_name, 1);
             }
             else {
@@ -145,43 +150,43 @@ class Getopt::Long {
                 die "The value of the option \"$option_name\" is not found.";
               }
               
-              my $is_array = $found_rule->is_array;
+              my $is_array = $found_spec->{is_array};
               
-              if ($found_rule->type == Getopt::Long::Rule->TYPE_STRING) {
+              if ($found_spec->{type} == Getopt::Long::Spec->TYPE_STRING) {
                 if ($is_array) {
                   my $current_values = (string[])$values_h->get($primary_name);
                   
                   $current_values = Array->merge_string($current_values, [$option_value]);
                   
-                  $current_values->set($current_values);
+                  $values_h->set($primary_name, $current_values);
                 }
                 else {
                   $values_h->set($primary_name, $option_value);
                 }
               }
-              elsif ($found_rule->type == Getopt::Long::Rule->TYPE_INT) {
+              elsif ($found_spec->{type} == Getopt::Long::Spec->TYPE_INT) {
                 my $optiosn_value_int = Fn->to_int($option_value);
                 
                 if ($is_array) {
                   my $current_values = (Int[])$values_h->get($primary_name);
                   
-                  $current_values = Array->merge_object($current_values, [$optiosn_value_int]);
+                  $current_values = (Int[])Array->merge_object($current_values, [(Int)$optiosn_value_int]);
                   
-                  $current_values->set($current_values);
+                  $values_h->set($primary_name, $current_values);
                 }
                 else {
                   $values_h->set($primary_name, $optiosn_value_int);
                 }
               }
-              elsif ($found_rule->type == Getopt::Long::Rule->TYPE_DOUBLE) {
-                my $optiosn_value_double = Fn->to_int($option_value);
+              elsif ($found_spec->{type} == Getopt::Long::Spec->TYPE_DOUBLE) {
+                my $optiosn_value_double = Fn->to_double($option_value);
                 
                 if ($is_array) {
                   my $current_values = (Double[])$values_h->get($primary_name);
                   
-                  $current_values = Array->merge_object($current_values, [$optiosn_value_double]);
+                  $current_values = (Double[])Array->merge_object($current_values, [(Double)$optiosn_value_double]);
                   
-                  $current_values->set($current_values);
+                  $values_h->set($primary_name, $current_values);
                 }
                 else {
                   $values_h->set($primary_name, $optiosn_value_double);
@@ -191,20 +196,17 @@ class Getopt::Long {
                 die "Unexpected Error.";
               }
             }
-            
-            my $primary_name = $found_rule->{primary_name};
-            
           }
           else {
-            die "The option \"$option_name\" is unknown.";
+            die "The option \"$option_name\" is not available.";
           }
         }
         else {
-          die "The option \"$option\" is invalid."
+          die "The option \"$argv\" is an invalid format.";
         }
       }
       else {
-        $new_argv_list->push($arg_name);
+        $new_argv_list->push($argv);
       }
     }
     
