@@ -128,6 +128,40 @@ class TestCase::Getopt::Long {
     return 1;
   }
   
+  static method int_array : int () {
+    
+    # Spec:opt=i,Args:--opt=2
+    {
+      my $args = ["cmd", "--opt=2", "--opt", "3"];
+      
+      my $values_h = Hash->new({
+        opt => new int[0],
+      });
+      
+      my $specs = [
+        "opt=i",
+      ];
+      
+      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      
+      my $value_opt = $values_h->get("opt");
+      
+      unless ($value_opt is_type int[]) {
+        return 0;
+      }
+      
+      unless (Array->equals_int((int[])$value_opt, [2, 3])) {
+        return 0;
+      }
+      
+      unless (Array->equals_string($new_argv, ["cmd"])) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+  
   static method multiple_names : int () {
     
     # Spec:opt,Args:--opt
