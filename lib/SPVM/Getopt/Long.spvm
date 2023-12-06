@@ -117,13 +117,15 @@ class Getopt::Long {
           last;
         }
         
-        my $option_re = Regex->new("--?(\w+)(?:=([\w\.\-]+))?");
+        my $option_re = Regex->new("(--?)(\w+)(?:=([\w\.\-]+))?");
         
         if (my $match = $option_re->match($arg)) {
           
-          my $option_name = $match->cap1;
+          my $option_hyphen = $match->cap1;
           
-          my $option_value = $match->cap2;
+          my $option_name = $match->cap2;
+          
+          my $option_value = $match->cap3;
           
           my $found_spec = (Getopt::Long::Spec)$specs_h->get($option_name);
           
@@ -221,7 +223,7 @@ class Getopt::Long {
             }
           }
           else {
-            die "The option \"$option_name\" is not available.";
+            die "The option \"$option_hyphen$option_name\" is not available.";
           }
         }
         else {

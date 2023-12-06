@@ -750,4 +750,28 @@ class TestCase::Getopt::Long {
     
     return 1;
   }
+  
+  static method exceptions : int () {
+    
+    {
+      my $args = ["cmd", "--opt"];
+      
+      my $values_h = Hash->new;
+      
+      my $spec_strings = [
+        "opt_wrong",
+      ];
+      
+      my $args_ref = [$args];
+      eval { Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings); }
+      
+      unless (Fn->contains($@, "The option \"--opt\" is not available.")) {
+        return 0;
+      }
+    }
+    
+    $@ = undef;
+    
+    return 1;
+  }
 }
