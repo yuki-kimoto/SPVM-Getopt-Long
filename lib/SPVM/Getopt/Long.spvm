@@ -43,7 +43,7 @@ class Getopt::Long {
         
         if (length $type_char) {
           unless ($type_char eq "s" || $type_char eq "i" || $type_char eq "f") {
-            die "The type \"$type_char\" in the spec is not available.";
+            die "The type \"$type_char\" is not available.";
           }
         }
         
@@ -78,14 +78,14 @@ class Getopt::Long {
           my $found_spec = $specs_h->get($name);
           
           if ($found_spec) {
-            die "The option name \"$name\" must be given onece.";
+            die "The option name \"$name\" must be given once.";
           }
           
           $specs_h->set($name => $spec);
         }
       }
       else {
-        die "The spec \"$spec_string\" is invalid.";
+        die "The option specification \"$spec_string\" is invalid.";
       }
     }
     
@@ -106,7 +106,7 @@ class Getopt::Long {
       my $args_number = $args_index + 1;
       
       unless ($arg) {
-        die "The ${args_number}th argument of $arg must be defined.";
+        die "The ${args_number}th argument must be defined.";
       }
       
       my $option_start_re = Regex->new("^--?");

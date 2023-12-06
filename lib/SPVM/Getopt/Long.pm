@@ -126,6 +126,12 @@ The differnt order of options is differnt each other. C<--foo arg1 --bar arg2 ar
 
 The C<--name=value> syntax is available. C<--foo=value> is the same as C<--foo value>.
 
+Exceptions:
+
+$values_h must be defined. Otherwise an exception is thrown.
+
+If the type is not available, an exception is thrown.
+
 =head1 Repository
 
 L<SPVM::Getopt::Long - Github|https://github.com/yuki-kimoto/SPVM-Getopt-Long>

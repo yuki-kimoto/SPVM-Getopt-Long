@@ -770,6 +770,75 @@ class TestCase::Getopt::Long {
       }
     }
     
+    {
+      my $args = ["cmd", "--opt"];
+      
+      my $values_h = Hash->new;
+      
+      my $spec_strings = [
+        "opt=p",
+      ];
+      
+      my $args_ref = [$args];
+      eval { Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings); }
+      
+      unless (Fn->contains($@, "The type \"p\" is not available.")) {
+        return 0;
+      }
+    }
+    
+    {
+      my $args = ["cmd", "--opt"];
+      
+      my $values_h = Hash->new;
+      
+      my $spec_strings = [
+        "opt=i",
+        "opt",
+      ];
+      
+      my $args_ref = [$args];
+      eval { Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings); }
+      
+      unless (Fn->contains($@, "The option name \"opt\" must be given once.")) {
+        return 0;
+      }
+    }
+    
+    {
+      my $args = ["cmd", "--opt"];
+      
+      my $values_h = Hash->new;
+      
+      my $spec_strings = [
+        "opt?i",
+      ];
+      
+      my $args_ref = [$args];
+      eval { Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings); }
+      
+      unless (Fn->contains($@, "The option specification \"opt?i\" is invalid.")) {
+        return 0;
+      }
+    }
+    
+    {
+      my $args = ["cmd", undef];
+      
+      my $values_h = Hash->new;
+      
+      my $spec_strings = [
+        "opt",
+      ];
+      
+      my $args_ref = [$args];
+      eval { Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings); }
+      
+      unless (Fn->contains($@, "The 2th argument must be defined.")) {
+        return 0;
+      }
+    }
+    
     $@ = undef;
     
     return 1;
