@@ -16,8 +16,6 @@ my $api = SPVM::api();
 
 my $start_memory_blocks_count = $api->get_memory_blocks_count;
 
-ok(SPVM::TestCase::Getopt::Long->test);
-
 ok(SPVM::TestCase::Getopt::Long->bool);
 
 ok(SPVM::TestCase::Getopt::Long->bool_array);

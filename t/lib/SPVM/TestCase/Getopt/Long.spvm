@@ -4,11 +4,6 @@ class TestCase::Getopt::Long {
   use Hash;
   use Array;
   
-  static method test : int () {
-    
-    return 1;
-  }
-  
   static method bool : int () {
     
     # Spec:opt,Args:--opt
