@@ -556,4 +556,32 @@ class TestCase::Getopt::Long {
     return 1;
   }
   
+  static method stop_parsing : int () {
+    
+    # Spec:opt=i,Args:--opt=2
+    {
+      my $args = ["cmd", "--opt=2", "--", "--opt3"];
+      
+      my $values_h = Hash->new;
+      
+      my $specs = [
+        "opt=s",
+      ];
+      
+      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      
+      my $value_opt = $values_h->get("opt");
+      unless ($value_opt is_type string) {
+        return 0;
+      }
+      unless ($value_opt->(string) eq "2") {
+        return 0;
+      }
+      unless (Array->equals_string($new_argv, ["cmd", "--opt3"])) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
 }

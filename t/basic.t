@@ -38,6 +38,8 @@ ok(SPVM::TestCase::Getopt::Long->multiple_names);
 
 ok(SPVM::TestCase::Getopt::Long->option_value);
 
+ok(SPVM::TestCase::Getopt::Long->stop_parsing);
+
 # Version check
 {
   my $version_string = SPVM::Fn->get_version_string("Getopt::Long");
