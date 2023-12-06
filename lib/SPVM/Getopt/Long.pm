@@ -36,7 +36,9 @@ The Getopt::Long class of L<SPVM> has methods to parse command line options.
   
   my $command_args_ref = [$comand_args];
   
-  Getopt::Long->GetOptions($command_args_ref, $values_h, $spec_strings);
+  Getopt::Long->GetOptionsFromArray($command_args_ref, $values_h, $spec_strings);
+  
+  $command_args = $command_args_ref->[0];
   
   my $file = $values_h->get_string("file");
   
@@ -50,19 +52,19 @@ The Getopt::Long class of L<SPVM> has methods to parse command line options.
 
 =head2 GetOptionsFromArray
 
-C<static method GetOptionsFromArray : void ($args_ref : string[][], $values_h : Hash, $spec_strings : string[]);>
+C<static method GetOptionsFromArray : void ($args_ref : string[][], $values_h : L<Hash|SPVM::Hash>, $spec_strings : string[]);>
 
-Parses command line options referenced by $args_ref using the option specifiction $spec_strings.
+Parses command line options of $args_ref at index 0 according to the option specifiction $spec_strings.
 
-In arguments $args, a string starting with C<--> or C<-> is interpreted as the start of an option name.
+Arguments starting with C<--> or C<-> is interpreted as the start of an option name.
 
-If the option name contains C<=>, the string after C<=> is the value of the option in the string, L<Int|SPVM::Int>, L<Double|SPVM::Double> types.
+Option names must be composed of C<0-9a-zA-Z_>.
 
-If the option name do not contains C<=>, the next string of $args is the value of the option in the string, L<Int|SPVM::Int>, L<Double|SPVM::Double> types.
+If the option name contains C<=>, the string after C<=> is the option value, otherwise its next argument is the option value.
 
-A new command line arguments that parsed command line arguments are removed is set to $args_ref at index 0.
+A new command line arguments that parsed command line arguments are removed is created and  set to $args_ref at index 0.
 
-Spec Syntax (defined by yacc syntax):
+Option Specification Syntax (defined by yacc syntax):
 
   spec_string
     : option_names
@@ -80,7 +82,7 @@ Spec Syntax (defined by yacc syntax):
     | 'i'
     | 'f'
 
-The first name of C<option_names> is the primary option name.
+Multiple option names are available using C<|>. The first name of C<option_names> is the primary option name.
 
 The type C<s> means the string type.
 
@@ -98,9 +100,9 @@ If the type is floating point, the type of $values_h must be the Double, double[
 
 If the type is bool, the type of $values_h must be the Int, int[], or undef type.
 
-If the type of the value of $values_h is an array, the parsed value is added to $values_h with the primary option name at the end.
+If the type of the value of $values_h is an array, the parsed value is pushed at the end of the value of $values_h with the primary option name.
 
-If the type of of $values_h is not an array, the parsed value is set to $values_h with the primary option name.
+If the type of of $values_h is not an array, the parsed value is set to the value of $values_h with the primary option name.
 
 Option Specifiction Examples:
   
