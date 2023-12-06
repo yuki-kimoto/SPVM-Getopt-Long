@@ -132,6 +132,29 @@ $values_h must be defined. Otherwise an exception is thrown.
 
 If the type is not available, an exception is thrown.
 
+$values_h must be defined. Otherwise an exception is thrown.
+
+The option name "$name" must be given once. Otherwise an exception is thrown.
+
+If the option specification "$spec_string" is invalid, an exception is thrown.
+
+Each argument must be defined. Otherwise an exception is thrown.
+
+A bool type option cannot have the value. If so, an exception is thrown.
+
+Options other than thg bool type must must have its value. Otherwise an exception is thrown. Otherwise an exception is thrown.
+
+The type of the option value which type is string must be the string, string[], or undef type. Otherwise an exception is thrown.
+
+The type of the option value which type is bool must be the Int, int[], or undef type. Otherwise an exception is thrown.
+
+The type of the option value which type is integer must be the Int, int[], or undef type. Otherwise an exception is thrown.
+
+The type of the option value which type is floating point must be Double, double[], or undef type. Otherwise an exception is thrown.
+
+If the option is not available, an exception is thrown.
+
+If the option is an invalid format, an exception is thrown.
 
 =head1 Repository
 
