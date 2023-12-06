@@ -19,18 +19,18 @@ The Getopt::Long class of L<SPVM> has methods to parse command line options.
   
   my $comand_args = CommandLineInfo->ARGV;
   
-  my $values_h = Hash->new(
-    data => "file.dat",
+  my $values_h = Hash->new({
+    file => "file.dat",
     length => 24,
     verbose => 0,
     numbers => new int[0],
-  );
+  });
   
   my $spec_strings = [
-    "length=i",
-    "file=s",
-    "verbose"
-    "numbers=i",
+    "file|f=s",
+    "length|l=i",
+    "verbose|v",
+    "numbers|n=i",
   ];
   
   $comand_args = Getopt::Long->GetOptions($comand_args, $values_h, $spec_strings);

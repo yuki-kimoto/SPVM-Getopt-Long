@@ -584,4 +584,129 @@ class TestCase::Getopt::Long {
     
     return 1;
   }
+  
+  static method extra : int () {
+    
+    {
+      my $comand_args = ["foo", "--file=file2.dat", "--length=5", "--verbose", "--numbers=5", , "--numbers=6", "bar"];
+      
+      my $values_h = Hash->new({
+        file => "file.dat",
+        length => 24,
+        verbose => 0,
+        numbers => new int[0],
+      });
+      
+      my $spec_strings = [
+        "file|f=s",
+        "length|l=i",
+        "verbose|v",
+        "numbers|n=i",
+      ];
+      
+      $comand_args = Getopt::Long->GetOptionsFromArray($comand_args, $values_h, $spec_strings);
+      
+      unless ($values_h->get("file")->(string) eq "file2.dat") {
+        return 0;
+      }
+      
+      unless ($values_h->get("length")->(int) == 5) {
+        return 0;
+      }
+      
+      unless ($values_h->get("verbose")->(int) == 1) {
+        return 0;
+      }
+      
+      unless (Array->equals_int($values_h->get("numbers")->(int[]), [5, 6])) {
+        return 0;
+      }
+      
+      unless (Array->equals_string($comand_args, ["foo", "bar"])) {
+        return 0;
+      }
+    }
+    
+    {
+      my $comand_args = ["foo", "-f", "file2.dat", "-l", "5", "-v", "-n", "5", "-n", "6", "bar"];
+      
+      my $values_h = Hash->new({
+        file => "file.dat",
+        length => 24,
+        verbose => 0,
+        numbers => new int[0],
+      });
+      
+      my $spec_strings = [
+        "file|f=s",
+        "length|l=i",
+        "verbose|v",
+        "numbers|n=i",
+      ];
+      
+      $comand_args = Getopt::Long->GetOptionsFromArray($comand_args, $values_h, $spec_strings);
+      
+      unless ($values_h->get("file")->(string) eq "file2.dat") {
+        return 0;
+      }
+      
+      unless ($values_h->get("length")->(int) == 5) {
+        return 0;
+      }
+      
+      unless ($values_h->get("verbose")->(int) == 1) {
+        return 0;
+      }
+      
+      unless (Array->equals_int($values_h->get("numbers")->(int[]), [5, 6])) {
+        return 0;
+      }
+      
+      unless (Array->equals_string($comand_args, ["foo", "bar"])) {
+        return 0;
+      }
+    }
+    
+    {
+      my $comand_args = new string[0];
+      
+      my $values_h = Hash->new({
+        file => "file.dat",
+        length => 24,
+        verbose => 0,
+        numbers => new int[0],
+      });
+      
+      my $spec_strings = [
+        "file|f=s",
+        "length|l=i",
+        "verbose|v",
+        "numbers|n=i",
+      ];
+      
+      $comand_args = Getopt::Long->GetOptionsFromArray($comand_args, $values_h, $spec_strings);
+      
+      unless ($values_h->get("file")->(string) eq "file.dat") {
+        return 0;
+      }
+      
+      unless ($values_h->get("length")->(int) == 24) {
+        return 0;
+      }
+      
+      unless ($values_h->get("verbose")->(int) == 0) {
+        return 0;
+      }
+      
+      unless (Array->equals_int($values_h->get("numbers")->(int[]), new int[0])) {
+        return 0;
+      }
+      
+      unless (Array->equals_string($comand_args, new string[0])) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
 }
