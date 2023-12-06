@@ -20,8 +20,6 @@ class Getopt::Long::Spec {
   
   has type : int;
   
-  has is_array : byte;
-  
   # Class Methods
   private static method new : Getopt::Long::Spec () {
     my $self = new Getopt::Long::Spec;

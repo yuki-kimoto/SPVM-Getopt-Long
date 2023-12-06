@@ -40,7 +40,7 @@ class TestCase::Getopt::Long {
     
     return 1;
   }
-
+  
   static method multiple_names : int () {
     
     # Spec:opt,Options:--opt

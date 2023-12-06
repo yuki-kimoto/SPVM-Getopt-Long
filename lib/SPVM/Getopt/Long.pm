@@ -49,9 +49,9 @@ If the option name contains C<=>, the string after C<=> is the value of the opti
 
 If the option name do not contains C<=>, the next string of $args is the value of the option in the string, L<Int|SPVM::Int>, L<Double|SPVM::Double> types.
 
-If C<@> is not given in the spec, the parsed value is set to $values_h with the primary option name.
+If the value of $values_h is an array, the parsed value is added to $values_h with the primary option name at the end.
 
-If C<@> is given in the spec, the parsed value is added to $values_h with the primary option name at the end.
+If the value of $values_h is not an array, the parsed value is set to $values_h with the primary option name.
 
 And returns a new command line arguments that parsed command line arguments are removed.
 
@@ -60,7 +60,6 @@ Spec Syntax (defined by yacc syntax):
   spec_string
     : option_names
     | option_names '=' type
-    | option_names '=' type is_array
   
   options_names
     : options_names '|' option_name
@@ -68,9 +67,6 @@ Spec Syntax (defined by yacc syntax):
   
   option_name
     : \w+
-  
-  is_array
-    : '@'
   
   type
     : 's'
@@ -96,8 +92,6 @@ Option Specifiction Examples:
   "timeout=f"
   
   "length|l"
-  
-  "numbers=i@"
 
 Command Line Arguments Examples:
 
