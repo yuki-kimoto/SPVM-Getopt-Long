@@ -623,12 +623,13 @@ class TestCase::Getopt::Long {
   static method extra : int () {
     
     {
-      my $comand_args = ["foo", "--file=file2.dat", "--length=5", "--verbose", "--numbers=5", , "--numbers=6", "bar"];
+      my $comand_args = ["foo", "--file=file2.dat", "--length=5", "--verbose", "--point=1.5", "--numbers=5", , "--numbers=6", "bar"];
       
       my $values_h = Hash->new({
         file => "file.dat",
         length => 24,
         verbose => 0,
+        point => 0.5,
         numbers => new int[0],
       });
       
@@ -636,6 +637,7 @@ class TestCase::Getopt::Long {
         "file|f=s",
         "length|l=i",
         "verbose|v",
+        "point|p=f",
         "numbers|n=i",
       ];
       
@@ -652,6 +654,10 @@ class TestCase::Getopt::Long {
       }
       
       unless ($values_h->get("verbose")->(int) == 1) {
+        return 0;
+      }
+      
+      unless ($values_h->get("point")->(double) == 1.5) {
         return 0;
       }
       
@@ -713,6 +719,7 @@ class TestCase::Getopt::Long {
         file => "file.dat",
         length => 24,
         verbose => 0,
+        point => 0.5,
         numbers => new int[0],
       });
       
@@ -720,6 +727,7 @@ class TestCase::Getopt::Long {
         "file|f=s",
         "length|l=i",
         "verbose|v",
+        "point|p=f",
         "numbers|n=i",
       ];
       
@@ -736,6 +744,10 @@ class TestCase::Getopt::Long {
       }
       
       unless ($values_h->get("verbose")->(int) == 0) {
+        return 0;
+      }
+      
+      unless ($values_h->get("point")->(double) == 0.5) {
         return 0;
       }
       
