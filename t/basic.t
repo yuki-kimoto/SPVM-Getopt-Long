@@ -30,6 +30,10 @@ ok(SPVM::TestCase::Getopt::Long->double);
 
 ok(SPVM::TestCase::Getopt::Long->double_array);
 
+ok(SPVM::TestCase::Getopt::Long->string);
+
+ok(SPVM::TestCase::Getopt::Long->string_array);
+
 ok(SPVM::TestCase::Getopt::Long->multiple_names);
 
 ok(SPVM::TestCase::Getopt::Long->option_value);
