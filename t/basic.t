@@ -24,6 +24,12 @@ ok(SPVM::TestCase::Getopt::Long->bool_array);
 
 ok(SPVM::TestCase::Getopt::Long->int);
 
+ok(SPVM::TestCase::Getopt::Long->int_array);
+
+ok(SPVM::TestCase::Getopt::Long->double);
+
+ok(SPVM::TestCase::Getopt::Long->double_array);
+
 ok(SPVM::TestCase::Getopt::Long->multiple_names);
 
 ok(SPVM::TestCase::Getopt::Long->option_value);

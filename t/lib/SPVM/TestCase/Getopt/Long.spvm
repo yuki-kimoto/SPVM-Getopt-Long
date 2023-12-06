@@ -130,7 +130,7 @@ class TestCase::Getopt::Long {
   
   static method int_array : int () {
     
-    # Spec:opt=i,Args:--opt=2
+    # Spec:opt=i,Args:--opt=2 --opt 3
     {
       my $args = ["cmd", "--opt=2", "--opt", "3"];
       
@@ -151,6 +151,93 @@ class TestCase::Getopt::Long {
       }
       
       unless (Array->equals_int((int[])$value_opt, [2, 3])) {
+        return 0;
+      }
+      
+      unless (Array->equals_string($new_argv, ["cmd"])) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+  
+  static method double : double () {
+    
+    # Spec:opt=i,Args:--opt=2.5
+    {
+      my $args = ["cmd", "--opt=2.5"];
+      
+      my $values_h = Hash->new;
+      
+      my $specs = [
+        "opt=f",
+      ];
+      
+      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      
+      my $value_opt = $values_h->get("opt");
+      unless ($value_opt is_type Double) {
+        return 0;
+      }
+      unless ($value_opt->(double) == 2.5) {
+        return 0;
+      }
+      unless (Array->equals_string($new_argv, ["cmd"])) {
+        return 0;
+      }
+    }
+    
+    # Spec:opt=i,Args:--opt 2
+    {
+      my $args = ["cmd", "--opt", "2.5"];
+      
+      my $values_h = Hash->new;
+      
+      my $specs = [
+        "opt=f",
+      ];
+      
+      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      
+      my $value_opt = $values_h->get("opt");
+      unless ($value_opt is_type Double) {
+        return 0;
+      }
+      unless ($value_opt->(double) == 2.5) {
+        return 0;
+      }
+      unless (Array->equals_string($new_argv, ["cmd"])) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+  
+  static method double_array : double () {
+    
+    # Spec:opt=i,Args:--opt=2.5 --opt 3.5
+    {
+      my $args = ["cmd", "--opt=2.5", "--opt", "3.5"];
+      
+      my $values_h = Hash->new({
+        opt => new double[0],
+      });
+      
+      my $specs = [
+        "opt=f",
+      ];
+      
+      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      
+      my $value_opt = $values_h->get("opt");
+      
+      unless ($value_opt is_type double[]) {
+        return 0;
+      }
+      
+      unless (Array->equals_double((double[])$value_opt, [2.5, 3.5])) {
         return 0;
       }
       
