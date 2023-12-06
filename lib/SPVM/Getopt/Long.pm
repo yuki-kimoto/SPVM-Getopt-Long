@@ -23,14 +23,14 @@ The Getopt::Long class of L<SPVM> has methods to parse command line options.
     data => "file.dat",
     length => 24,
     verbose => 0,
-    numbers => new Int[0],
+    numbers => new int[0],
   );
   
   my $spec_strings = [
     "length=i",
     "file=s",
     "verbose"
-    "number=i@",
+    "numbers=i",
   ];
   
   $comand_args = Getopt::Long->GetOptions($comand_args, $values_h, $spec_strings);
@@ -48,10 +48,6 @@ In arguments $args, a string starting with C<--> or C<-> is interpreted as the s
 If the option name contains C<=>, the string after C<=> is the value of the option in the string, L<Int|SPVM::Int>, L<Double|SPVM::Double> types.
 
 If the option name do not contains C<=>, the next string of $args is the value of the option in the string, L<Int|SPVM::Int>, L<Double|SPVM::Double> types.
-
-If the value of $values_h is an array, the parsed value is added to $values_h with the primary option name at the end.
-
-If the value of $values_h is not an array, the parsed value is set to $values_h with the primary option name.
 
 And returns a new command line arguments that parsed command line arguments are removed.
 
@@ -77,11 +73,23 @@ The first name of C<option_names> is the primary option name.
 
 The type C<s> means the string type.
 
-The type C<i> means the L<Int|SPVM::Int> type.
+The type C<i> means the int type.
 
-The type C<f> means the L<Double|SPVM::Double> type.
+The type C<f> means the double type.
 
-If a type is not given, the type is a boolean type. The set value is an L<Int|SPVM::Int> object with the value field set to 1.
+If a type is not given, the type is a bool type.
+
+If the type is string, the type of $values_h must be the string, string[], or undef type.
+
+If the type is int, the type of $values_h must be the Int, int[], or undef type.
+
+If the type is double, the type of $values_h must be the Double, double[], or undef type.
+
+If the type is bool, the type of $values_h must be the Int, int[], or undef type.
+
+If the type of the value of $values_h is an array, the parsed value is added to $values_h with the primary option name at the end.
+
+If the type of of $values_h is not an array, the parsed value is set to $values_h with the primary option name.
 
 Option Specifiction Examples:
   

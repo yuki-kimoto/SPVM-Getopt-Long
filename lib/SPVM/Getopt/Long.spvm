@@ -72,6 +72,8 @@ class Getopt::Long {
             $type = Getopt::Long::Spec->TYPE_DOUBLE;
           }
           
+          $spec->{type} = $type;
+          
           my $found_spec = $specs_h->get($name);
           
           if ($found_spec) {
@@ -127,75 +129,86 @@ class Getopt::Long {
           if ($found_spec) {
             my $primary_name = $found_spec->{primary_name};
             
-            if ($found_spec->{type} == Getopt::Long::Spec->TYPE_BOOL) {
-              $values_h->set($primary_name, 1);
+            unless ($option_value) {
+              if ($args_index + 1 < $args_length) {
+                $option_value = $args->[$args_index + 1];
+              }
             }
-            else {
-              unless ($option_value) {
-                if ($args_index + 1 < $args_length) {
-                  $option_value = $args->[$args_index + 1];
-                }
-              }
-              
-              unless ($option_value) {
-                die "The value of the option \"$option_name\" is not found.";
-              }
-              
-              my $value = $values_h->get($primary_name);
-              
-              if ($found_spec->{type} == Getopt::Long::Spec->TYPE_STRING) {
-                if ($value is_type string[]) {
-                  my $current_values = (string[])$values_h->get($primary_name);
-                  
-                  $current_values = Array->merge_string($current_values, [$option_value]);
-                  
-                  $values_h->set($primary_name, $current_values);
-                }
-                elsif ($value is_type string || !$value) {
-                  $values_h->set($primary_name, $option_value);
-                }
-                else {
-                  die "The option value must be string, string[], or undef type. The option name is \"$option_name\". The type is string.";
-                }
-              }
-              elsif ($found_spec->{type} == Getopt::Long::Spec->TYPE_INT) {
-                my $optiosn_value_int = Fn->to_int($option_value);
+            
+            unless ($option_value) {
+              die "The value of the option \"$option_name\" is not found.";
+            }
+            
+            my $value = $values_h->get($primary_name);
+            
+            if ($found_spec->{type} == Getopt::Long::Spec->TYPE_STRING) {
+              if ($value is_type string[]) {
+                my $current_values = (string[])$values_h->get($primary_name);
                 
-                if ($value is_type Int[]) {
-                  my $current_values = (Int[])$values_h->get($primary_name);
-                  
-                  $current_values = (Int[])Array->merge_object($current_values, [(Int)$optiosn_value_int]);
-                  
-                  $values_h->set($primary_name, $current_values);
-                }
-                elsif ($value is_type Int || !$value) {
-                  
-                  $values_h->set($primary_name, $optiosn_value_int);
-                }
-                else {
-                  die "The option value must be Int, Int[], or undef type. The option name is \"$option_name\". The type is int.";
-                }
-              }
-              elsif ($found_spec->{type} == Getopt::Long::Spec->TYPE_DOUBLE) {
-                my $optiosn_value_double = Fn->to_double($option_value);
+                $current_values = Array->merge_string($current_values, [$option_value]);
                 
-                if ($value is_type Int[]) {
-                  my $current_values = (Double[])$values_h->get($primary_name);
-                  
-                  $current_values = (Double[])Array->merge_object($current_values, [(Double)$optiosn_value_double]);
-                  
-                  $values_h->set($primary_name, $current_values);
-                }
-                elsif ($value is_type Int || !$value) {
-                  $values_h->set($primary_name, $optiosn_value_double);
-                }
-                else {
-                  die "The option value must be Double, Double[], or undef type. The option name is \"$option_name\". The type is double.";
-                }
+                $values_h->set($primary_name, $current_values);
+              }
+              elsif ($value is_type string || !$value) {
+                $values_h->set($primary_name, $option_value);
               }
               else {
-                die "Unexpected Error.";
+                die "The option value must be string, string[], or undef type. The option name is \"$option_name\". The type is string.";
               }
+            }
+            elsif ($found_spec->{type} == Getopt::Long::Spec->TYPE_BOOL) {
+              my $optiosn_value_int = 1;
+              
+              if ($value is_type int[]) {
+                my $current_values = (int[])$values_h->get($primary_name);
+                
+                $current_values = (int[])Array->merge_int($current_values, [$optiosn_value_int]);
+                
+                $values_h->set($primary_name, $current_values);
+              }
+              elsif ($value is_type Int || !$value) {
+                $values_h->set($primary_name, $optiosn_value_int);
+              }
+              else {
+                die "The option value must be Int, int[], or undef type. The option name is \"$option_name\". The type is bool.";
+              }
+            }
+            elsif ($found_spec->{type} == Getopt::Long::Spec->TYPE_INT) {
+              my $optiosn_value_int = Fn->to_int($option_value);
+              
+              if ($value is_type int[]) {
+                my $current_values = (int[])$values_h->get($primary_name);
+                
+                $current_values = (int[])Array->merge_int($current_values, [$optiosn_value_int]);
+                
+                $values_h->set($primary_name, $current_values);
+              }
+              elsif ($value is_type Int || !$value) {
+                $values_h->set($primary_name, $optiosn_value_int);
+              }
+              else {
+                die "The option value must be Int, int[], or undef type. The option name is \"$option_name\". The type is int.";
+              }
+            }
+            elsif ($found_spec->{type} == Getopt::Long::Spec->TYPE_DOUBLE) {
+              my $optiosn_value_double = Fn->to_double($option_value);
+              
+              if ($value is_type double[]) {
+                my $current_values = (double[])$values_h->get($primary_name);
+                
+                $current_values = (double[])Array->merge_double($current_values, [$optiosn_value_double]);
+                
+                $values_h->set($primary_name, $current_values);
+              }
+              elsif ($value is_type Double || !$value) {
+                $values_h->set($primary_name, $optiosn_value_double);
+              }
+              else {
+                die "The option value must be Double, double[], or undef type. The option name is \"$option_name\". The type is double.";
+              }
+            }
+            else {
+              die "Unexpected Error.";
             }
           }
           else {

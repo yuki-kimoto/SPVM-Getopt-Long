@@ -41,6 +41,69 @@ class TestCase::Getopt::Long {
     return 1;
   }
   
+  static method bool_array : int () {
+    
+    # Spec:opt,Options:--opt --opt
+    {
+      my $args = ["cmd", "--opt", "--opt"];
+      
+      my $values_h = Hash->new({
+        opt => new int[0],
+      });
+      
+      my $specs = [
+        "opt",
+      ];
+      
+      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      
+      my $value_opt = $values_h->get("opt");
+      
+      unless ($value_opt is_type int[]) {
+        return 0;
+      }
+      
+      unless (Array->equals_int((int[])$value_opt, [1, 1])) {
+        return 0;
+      }
+      
+      unless (Array->equals_string($new_argv, ["cmd"])) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+  
+  static method int : int () {
+    
+    # Spec:opt=i,Options:--opt=2
+    {
+      my $args = ["cmd", "--opt=2"];
+      
+      my $values_h = Hash->new;
+      
+      my $specs = [
+        "opt=i",
+      ];
+      
+      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      
+      my $value_opt = $values_h->get("opt");
+      unless ($value_opt is_type Int) {
+        return 0;
+      }
+      unless ($value_opt->(int) == 2) {
+        return 0;
+      }
+      unless (Array->equals_string($new_argv, ["cmd"])) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+  
   static method multiple_names : int () {
     
     # Spec:opt,Options:--opt

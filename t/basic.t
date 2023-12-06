@@ -20,6 +20,10 @@ ok(SPVM::TestCase::Getopt::Long->test);
 
 ok(SPVM::TestCase::Getopt::Long->bool);
 
+ok(SPVM::TestCase::Getopt::Long->bool_array);
+
+ok(SPVM::TestCase::Getopt::Long->int);
+
 ok(SPVM::TestCase::Getopt::Long->multiple_names);
 
 # Version check
