@@ -11,36 +11,9 @@ class TestCase::Getopt::Long {
   
   static method bool : int () {
     
-    # --opt
+    # Spec:opt,Options:--opt
     {
       my $args = ["cmd", "--opt"];
-      
-      my $values_h = Hash->new;
-      
-      my $specs = [
-        "opt",
-      ];
-      
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
-      
-      my $value_opt = $values_h->get("opt");
-      
-      unless ($value_opt is_type Int) {
-        return 0;
-      }
-      
-      unless ($value_opt->(int) == 1) {
-        return 0;
-      }
-      
-      unless (Array->equals_string($new_argv, ["cmd"])) {
-        return 0;
-      }
-    }
-    
-    # -opt
-    {
-      my $args = ["cmd", "-opt"];
       
       my $values_h = Hash->new;
       
@@ -68,4 +41,170 @@ class TestCase::Getopt::Long {
     return 1;
   }
 
+  static method multiple_names : int () {
+    
+    # Spec:opt,Options:--opt
+    {
+      my $args = ["cmd", "--opt"];
+      
+      my $values_h = Hash->new;
+      
+      my $specs = [
+        "opt",
+      ];
+      
+      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      
+      my $value_opt = $values_h->get("opt");
+      
+      unless ($value_opt is_type Int) {
+        return 0;
+      }
+      
+      unless ($value_opt->(int) == 1) {
+        return 0;
+      }
+      
+      unless (Array->equals_string($new_argv, ["cmd"])) {
+        return 0;
+      }
+    }
+    
+    # Spec:opt,Options:-opt
+    {
+      my $args = ["cmd", "-opt"];
+      
+      my $values_h = Hash->new;
+      
+      my $specs = [
+        "opt",
+      ];
+      
+      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      
+      my $value_opt = $values_h->get("opt");
+      
+      unless ($value_opt is_type Int) {
+        return 0;
+      }
+      
+      unless ($value_opt->(int) == 1) {
+        return 0;
+      }
+      
+      unless (Array->equals_string($new_argv, ["cmd"])) {
+        return 0;
+      }
+    }
+    
+    # Spec:opt|o,Options:-opt
+    {
+      my $args = ["cmd", "-opt"];
+      
+      my $values_h = Hash->new;
+      
+      my $specs = [
+        "opt",
+      ];
+      
+      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      
+      my $value_opt = $values_h->get("opt");
+      
+      unless ($value_opt is_type Int) {
+        return 0;
+      }
+      
+      unless ($value_opt->(int) == 1) {
+        return 0;
+      }
+      
+      unless (Array->equals_string($new_argv, ["cmd"])) {
+        return 0;
+      }
+    }
+    
+    # Spec:opt|o,Options:--opt
+    {
+      my $args = ["cmd", "--opt"];
+      
+      my $values_h = Hash->new;
+      
+      my $specs = [
+        "opt|o",
+      ];
+      
+      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      
+      my $value_opt = $values_h->get("opt");
+      
+      unless ($value_opt is_type Int) {
+        return 0;
+      }
+      
+      unless ($value_opt->(int) == 1) {
+        return 0;
+      }
+      
+      unless (Array->equals_string($new_argv, ["cmd"])) {
+        return 0;
+      }
+    }
+    
+    # Spec:opt|o,Options:-o
+    {
+      my $args = ["cmd", "-o"];
+      
+      my $values_h = Hash->new;
+      
+      my $specs = [
+        "opt|o",
+      ];
+      
+      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      
+      my $value_opt = $values_h->get("opt");
+      
+      unless ($value_opt is_type Int) {
+        return 0;
+      }
+      
+      unless ($value_opt->(int) == 1) {
+        return 0;
+      }
+      
+      unless (Array->equals_string($new_argv, ["cmd"])) {
+        return 0;
+      }
+    }
+    
+    # Spec:opt|o|p,Options:-p
+    {
+      my $args = ["cmd", "-p"];
+      
+      my $values_h = Hash->new;
+      
+      my $specs = [
+        "opt|o|p",
+      ];
+      
+      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      
+      my $value_opt = $values_h->get("opt");
+      
+      unless ($value_opt is_type Int) {
+        return 0;
+      }
+      
+      unless ($value_opt->(int) == 1) {
+        return 0;
+      }
+      
+      unless (Array->equals_string($new_argv, ["cmd"])) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
 }
