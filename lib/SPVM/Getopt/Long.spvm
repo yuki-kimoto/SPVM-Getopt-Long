@@ -94,21 +94,6 @@ class Getopt::Long {
   
   private static method parse_args : string[] ($args : string[], $values_h : Hash, $specs_h : Hash of Getopt::Long::Spec) {
     
-    my $value_names = $values_h->keys;
-    
-    for my $value_name (@$value_names) {
-      
-      my $spec = (Getopt::Long::Spec)$specs_h->get($value_name);
-      
-      if ($spec) {
-        my $primary_name = $spec->{primary_name};
-        
-        unless ($value_name eq $primary_name) {
-          die "The name \"$value_name\"in \$values_h is not found in \$spec_strings.";
-        }
-      }
-    }
-    
     my $new_args_list = StringList->new;
     
     my $args_length = @$args;
