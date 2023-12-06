@@ -12,11 +12,13 @@ class TestCase::Getopt::Long {
       
       my $values_h = Hash->new;
       
-      my $specs = [
+      my $spec_strings = [
         "opt",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       
@@ -28,7 +30,7 @@ class TestCase::Getopt::Long {
         return 0;
       }
       
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -46,11 +48,13 @@ class TestCase::Getopt::Long {
         opt => new int[0],
       });
       
-      my $specs = [
+      my $spec_strings = [
         "opt",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       
@@ -62,7 +66,7 @@ class TestCase::Getopt::Long {
         return 0;
       }
       
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -78,11 +82,13 @@ class TestCase::Getopt::Long {
       
       my $values_h = Hash->new;
       
-      my $specs = [
+      my $spec_strings = [
         "opt=i",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       unless ($value_opt is_type Int) {
@@ -91,7 +97,7 @@ class TestCase::Getopt::Long {
       unless ($value_opt->(int) == 2) {
         return 0;
       }
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -102,11 +108,13 @@ class TestCase::Getopt::Long {
       
       my $values_h = Hash->new;
       
-      my $specs = [
+      my $spec_strings = [
         "opt=i",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       unless ($value_opt is_type Int) {
@@ -115,7 +123,7 @@ class TestCase::Getopt::Long {
       unless ($value_opt->(int) == 2) {
         return 0;
       }
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -133,11 +141,13 @@ class TestCase::Getopt::Long {
         opt => new int[0],
       });
       
-      my $specs = [
+      my $spec_strings = [
         "opt=i",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       
@@ -149,7 +159,7 @@ class TestCase::Getopt::Long {
         return 0;
       }
       
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -165,11 +175,13 @@ class TestCase::Getopt::Long {
       
       my $values_h = Hash->new;
       
-      my $specs = [
+      my $spec_strings = [
         "opt=f",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       unless ($value_opt is_type Double) {
@@ -178,7 +190,7 @@ class TestCase::Getopt::Long {
       unless ($value_opt->(double) == 2.5) {
         return 0;
       }
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -189,11 +201,13 @@ class TestCase::Getopt::Long {
       
       my $values_h = Hash->new;
       
-      my $specs = [
+      my $spec_strings = [
         "opt=f",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       unless ($value_opt is_type Double) {
@@ -202,7 +216,7 @@ class TestCase::Getopt::Long {
       unless ($value_opt->(double) == 2.5) {
         return 0;
       }
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -220,11 +234,13 @@ class TestCase::Getopt::Long {
         opt => new double[0],
       });
       
-      my $specs = [
+      my $spec_strings = [
         "opt=f",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       
@@ -236,7 +252,7 @@ class TestCase::Getopt::Long {
         return 0;
       }
       
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -252,11 +268,13 @@ class TestCase::Getopt::Long {
       
       my $values_h = Hash->new;
       
-      my $specs = [
+      my $spec_strings = [
         "opt=s",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       unless ($value_opt is_type string) {
@@ -265,7 +283,7 @@ class TestCase::Getopt::Long {
       unless ($value_opt->(string) eq "2") {
         return 0;
       }
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -276,11 +294,13 @@ class TestCase::Getopt::Long {
       
       my $values_h = Hash->new;
       
-      my $specs = [
+      my $spec_strings = [
         "opt=s",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       unless ($value_opt is_type string) {
@@ -289,7 +309,7 @@ class TestCase::Getopt::Long {
       unless ($value_opt->(string) eq "2") {
         return 0;
       }
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -307,11 +327,13 @@ class TestCase::Getopt::Long {
         opt => new string[0],
       });
       
-      my $specs = [
+      my $spec_strings = [
         "opt=s",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       
@@ -323,7 +345,7 @@ class TestCase::Getopt::Long {
         return 0;
       }
       
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -339,11 +361,13 @@ class TestCase::Getopt::Long {
       
       my $values_h = Hash->new;
       
-      my $specs = [
+      my $spec_strings = [
         "opt",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       
@@ -355,7 +379,7 @@ class TestCase::Getopt::Long {
         return 0;
       }
       
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -366,11 +390,13 @@ class TestCase::Getopt::Long {
       
       my $values_h = Hash->new;
       
-      my $specs = [
+      my $spec_strings = [
         "opt",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       
@@ -382,7 +408,7 @@ class TestCase::Getopt::Long {
         return 0;
       }
       
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -393,11 +419,13 @@ class TestCase::Getopt::Long {
       
       my $values_h = Hash->new;
       
-      my $specs = [
+      my $spec_strings = [
         "opt",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       
@@ -409,7 +437,7 @@ class TestCase::Getopt::Long {
         return 0;
       }
       
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -420,11 +448,13 @@ class TestCase::Getopt::Long {
       
       my $values_h = Hash->new;
       
-      my $specs = [
+      my $spec_strings = [
         "opt|o",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       
@@ -436,7 +466,7 @@ class TestCase::Getopt::Long {
         return 0;
       }
       
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -447,11 +477,13 @@ class TestCase::Getopt::Long {
       
       my $values_h = Hash->new;
       
-      my $specs = [
+      my $spec_strings = [
         "opt|o",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       
@@ -463,7 +495,7 @@ class TestCase::Getopt::Long {
         return 0;
       }
       
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -474,11 +506,13 @@ class TestCase::Getopt::Long {
       
       my $values_h = Hash->new;
       
-      my $specs = [
+      my $spec_strings = [
         "opt|o|p",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       
@@ -490,7 +524,7 @@ class TestCase::Getopt::Long {
         return 0;
       }
       
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -506,11 +540,13 @@ class TestCase::Getopt::Long {
       
       my $values_h = Hash->new;
       
-      my $specs = [
+      my $spec_strings = [
         "opt=i",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       unless ($value_opt is_type Int) {
@@ -519,7 +555,7 @@ class TestCase::Getopt::Long {
       unless ($value_opt->(int) == 2) {
         return 0;
       }
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -530,11 +566,13 @@ class TestCase::Getopt::Long {
       
       my $values_h = Hash->new;
       
-      my $specs = [
+      my $spec_strings = [
         "opt=i",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       unless ($value_opt is_type Int) {
@@ -543,7 +581,7 @@ class TestCase::Getopt::Long {
       unless ($value_opt->(int) == 2) {
         return 0;
       }
-      unless (Array->equals_string($new_argv, ["cmd"])) {
+      unless (Array->equals_string($args, ["cmd"])) {
         return 0;
       }
     }
@@ -559,11 +597,13 @@ class TestCase::Getopt::Long {
       
       my $values_h = Hash->new;
       
-      my $specs = [
+      my $spec_strings = [
         "opt=s",
       ];
       
-      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      my $args_ref = [$args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $args = $args_ref->[0];
       
       my $value_opt = $values_h->get("opt");
       unless ($value_opt is_type string) {
@@ -572,7 +612,7 @@ class TestCase::Getopt::Long {
       unless ($value_opt->(string) eq "2") {
         return 0;
       }
-      unless (Array->equals_string($new_argv, ["cmd", "--opt3"])) {
+      unless (Array->equals_string($args, ["cmd", "--opt3"])) {
         return 0;
       }
     }
@@ -599,7 +639,9 @@ class TestCase::Getopt::Long {
         "numbers|n=i",
       ];
       
-      $comand_args = Getopt::Long->GetOptionsFromArray($comand_args, $values_h, $spec_strings);
+      my $args_ref = [$comand_args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $comand_args = $args_ref->[0];
       
       unless ($values_h->get("file")->(string) eq "file2.dat") {
         return 0;
@@ -639,7 +681,9 @@ class TestCase::Getopt::Long {
         "numbers|n=i",
       ];
       
-      $comand_args = Getopt::Long->GetOptionsFromArray($comand_args, $values_h, $spec_strings);
+      my $args_ref = [$comand_args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $comand_args = $args_ref->[0];
       
       unless ($values_h->get("file")->(string) eq "file2.dat") {
         return 0;
@@ -679,7 +723,9 @@ class TestCase::Getopt::Long {
         "numbers|n=i",
       ];
       
-      $comand_args = Getopt::Long->GetOptionsFromArray($comand_args, $values_h, $spec_strings);
+      my $args_ref = [$comand_args];
+      Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings);
+      $comand_args = $args_ref->[0];
       
       unless ($values_h->get("file")->(string) eq "file.dat") {
         return 0;

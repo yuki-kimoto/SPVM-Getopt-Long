@@ -17,8 +17,6 @@ The Getopt::Long class of L<SPVM> has methods to parse command line options.
   use Getopt::Long;
   use Hash;
   
-  my $comand_args = CommandLineInfo->ARGV;
-  
   # Default values
   my $values_h = Hash->new({
     file => "file.dat",
@@ -34,7 +32,11 @@ The Getopt::Long class of L<SPVM> has methods to parse command line options.
     "numbers|n=i",
   ];
   
-  $comand_args = Getopt::Long->GetOptions($comand_args, $values_h, $spec_strings);
+  my $comand_args = CommandLineInfo->ARGV;
+  
+  my $command_args_ref = [$comand_args];
+  
+  Getopt::Long->GetOptions($command_args_ref, $values_h, $spec_strings);
   
   my $file = $values_h->get_string("file");
   
@@ -48,9 +50,9 @@ The Getopt::Long class of L<SPVM> has methods to parse command line options.
 
 =head2 GetOptionsFromArray
 
-C<static method GetOptionsFromArray : string[] ($args : string[], $values_h : Hash, $spec_strings : string[]);>
+C<static method GetOptionsFromArray : void ($args_ref : string[][], $values_h : Hash, $spec_strings : string[]);>
 
-Parses command line options $args using the option specifiction $spec_strings.
+Parses command line options referenced by $args_ref using the option specifiction $spec_strings.
 
 In arguments $args, a string starting with C<--> or C<-> is interpreted as the start of an option name.
 
@@ -58,7 +60,7 @@ If the option name contains C<=>, the string after C<=> is the value of the opti
 
 If the option name do not contains C<=>, the next string of $args is the value of the option in the string, L<Int|SPVM::Int>, L<Double|SPVM::Double> types.
 
-And returns a new command line arguments that parsed command line arguments are removed.
+A new command line arguments that parsed command line arguments are removed is set to $args_ref at index 0.
 
 Spec Syntax (defined by yacc syntax):
 

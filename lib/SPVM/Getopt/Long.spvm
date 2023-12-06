@@ -10,7 +10,7 @@ class Getopt::Long {
   use StringList;
   use Getopt::Long::Spec;
   
-  static method GetOptionsFromArray : string[] ($args : string[], $values_h : Hash, $spec_strings : string[]) {
+  static method GetOptionsFromArray : void ($args_ref : string[][], $values_h : Hash, $spec_strings : string[]) {
     
     unless ($values_h) {
       die "\$values_h must be defined.";
@@ -18,9 +18,10 @@ class Getopt::Long {
     
     my $specs_h = &parse_spec_strings($spec_strings);
     
+    my $args = $args_ref->[0];
     my $new_args = &parse_args($args, $values_h, $specs_h);
     
-    return $new_args;
+    $args_ref->[0] = $new_args;
   }
   
   private static method parse_spec_strings : Hash of Getopt::Long::Spec ($spec_strings : string[]) {
