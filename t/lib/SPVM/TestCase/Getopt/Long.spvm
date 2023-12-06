@@ -918,7 +918,7 @@ class TestCase::Getopt::Long {
       my $args_ref = [$args];
       eval { Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings); }
       
-      unless (Fn->contains($@, "The type of the option value which type is int must be the Int, int[], or undef type. The option name is \"opt\".")) {
+      unless (Fn->contains($@, "The type of the option value which type is integer must be the Int, int[], or undef type. The option name is \"opt\".")) {
         return 0;
       }
     }
@@ -956,7 +956,7 @@ class TestCase::Getopt::Long {
       my $args_ref = [$args];
       eval { Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings); }
       
-      unless (Fn->contains($@, "The type of the option value which type is double must be Double, double[], or undef type. The option name is \"opt\".")) {
+      unless (Fn->contains($@, "The type of the option value which type is floating point must be Double, double[], or undef type. The option name is \"opt\".")) {
         return 0;
       }
     }

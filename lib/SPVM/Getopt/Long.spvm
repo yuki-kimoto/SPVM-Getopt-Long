@@ -198,7 +198,7 @@ class Getopt::Long {
                 $values_h->set($primary_name, $optiosn_value_int);
               }
               else {
-                die "The type of the option value which type is int must be the Int, int[], or undef type. The option name is \"$option_name\".";
+                die "The type of the option value which type is integer must be the Int, int[], or undef type. The option name is \"$option_name\".";
               }
             }
             elsif ($found_spec->{type} == Getopt::Long::Spec->TYPE_DOUBLE) {
@@ -215,7 +215,7 @@ class Getopt::Long {
                 $values_h->set($primary_name, $optiosn_value_double);
               }
               else {
-                die "The type of the option value which type is double must be Double, double[], or undef type. The option name is \"$option_name\".";
+                die "The type of the option value which type is floating point must be Double, double[], or undef type. The option name is \"$option_name\".";
               }
             }
             else {

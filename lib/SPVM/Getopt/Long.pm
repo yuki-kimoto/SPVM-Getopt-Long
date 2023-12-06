@@ -84,17 +84,17 @@ The first name of C<option_names> is the primary option name.
 
 The type C<s> means the string type.
 
-The type C<i> means the int type.
+The type C<i> means the integer type.
 
-The type C<f> means the double type.
+The type C<f> means the floating point type.
 
-If a type is not given, the type is a bool type.
+If a type is not given, the type is the bool type.
 
 If the type is string, the type of $values_h must be the string, string[], or undef type.
 
-If the type is int, the type of $values_h must be the Int, int[], or undef type.
+If the type is integer, the type of $values_h must be the Int, int[], or undef type.
 
-If the type is double, the type of $values_h must be the Double, double[], or undef type.
+If the type is floating point, the type of $values_h must be the Double, double[], or undef type.
 
 If the type is bool, the type of $values_h must be the Int, int[], or undef type.
 
@@ -131,6 +131,7 @@ Exceptions:
 $values_h must be defined. Otherwise an exception is thrown.
 
 If the type is not available, an exception is thrown.
+
 
 =head1 Repository
 
