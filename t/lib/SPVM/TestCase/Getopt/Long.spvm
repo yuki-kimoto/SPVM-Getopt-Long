@@ -851,6 +851,23 @@ class TestCase::Getopt::Long {
       }
     }
     
+    {
+      my $args = ["cmd", "--opt=5"];
+      
+      my $values_h = Hash->new;
+      
+      my $spec_strings = [
+        "opt",
+      ];
+      
+      my $args_ref = [$args];
+      eval { Getopt::Long->GetOptionsFromArray($args_ref, $values_h, $spec_strings); }
+      
+      unless (Fn->contains($@, "A bool type option \"--opt\" cannot have the value.")) {
+        return 0;
+      }
+    }
+    
     $@ = undef;
     
     return 1;

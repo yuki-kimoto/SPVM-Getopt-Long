@@ -134,7 +134,7 @@ class Getopt::Long {
             
             if ($found_spec->{type} == Getopt::Long::Spec->TYPE_BOOL) {
               if (length $option_value) {
-                die "A bool type option cannot have the value.";
+                die "A bool type option \"$option_hyphen$option_name\" cannot have the value.";
               }
             }
             else {
