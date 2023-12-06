@@ -294,4 +294,58 @@ class TestCase::Getopt::Long {
     
     return 1;
   }
+  
+  static method option_value : int () {
+    
+    # Spec:opt=i,Args:--opt=2
+    {
+      my $args = ["cmd", "--opt=2"];
+      
+      my $values_h = Hash->new;
+      
+      my $specs = [
+        "opt=i",
+      ];
+      
+      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      
+      my $value_opt = $values_h->get("opt");
+      unless ($value_opt is_type Int) {
+        return 0;
+      }
+      unless ($value_opt->(int) == 2) {
+        return 0;
+      }
+      unless (Array->equals_string($new_argv, ["cmd"])) {
+        return 0;
+      }
+    }
+    
+    # Spec:opt=i,Args:--opt 2
+    {
+      my $args = ["cmd", "--opt", "2"];
+      
+      my $values_h = Hash->new;
+      
+      my $specs = [
+        "opt=i",
+      ];
+      
+      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      
+      my $value_opt = $values_h->get("opt");
+      unless ($value_opt is_type Int) {
+        return 0;
+      }
+      unless ($value_opt->(int) == 2) {
+        return 0;
+      }
+      unless (Array->equals_string($new_argv, ["cmd"])) {
+        return 0;
+      }
+    }
+    
+    return 1;
+  }
+  
 }
