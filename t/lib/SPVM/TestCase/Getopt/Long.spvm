@@ -11,7 +11,7 @@ class TestCase::Getopt::Long {
   
   static method bool : int () {
     
-    # Spec:opt,Options:--opt
+    # Spec:opt,Args:--opt
     {
       my $args = ["cmd", "--opt"];
       
@@ -43,7 +43,7 @@ class TestCase::Getopt::Long {
   
   static method bool_array : int () {
     
-    # Spec:opt,Options:--opt --opt
+    # Spec:opt,Args:--opt --opt
     {
       my $args = ["cmd", "--opt", "--opt"];
       
@@ -77,9 +77,33 @@ class TestCase::Getopt::Long {
   
   static method int : int () {
     
-    # Spec:opt=i,Options:--opt=2
+    # Spec:opt=i,Args:--opt=2
     {
       my $args = ["cmd", "--opt=2"];
+      
+      my $values_h = Hash->new;
+      
+      my $specs = [
+        "opt=i",
+      ];
+      
+      my $new_argv = Getopt::Long->GetOptionsFromArray($args, $values_h, $specs);
+      
+      my $value_opt = $values_h->get("opt");
+      unless ($value_opt is_type Int) {
+        return 0;
+      }
+      unless ($value_opt->(int) == 2) {
+        return 0;
+      }
+      unless (Array->equals_string($new_argv, ["cmd"])) {
+        return 0;
+      }
+    }
+    
+    # Spec:opt=i,Args:--opt 2
+    {
+      my $args = ["cmd", "--opt", "2"];
       
       my $values_h = Hash->new;
       
@@ -106,7 +130,7 @@ class TestCase::Getopt::Long {
   
   static method multiple_names : int () {
     
-    # Spec:opt,Options:--opt
+    # Spec:opt,Args:--opt
     {
       my $args = ["cmd", "--opt"];
       
@@ -133,7 +157,7 @@ class TestCase::Getopt::Long {
       }
     }
     
-    # Spec:opt,Options:-opt
+    # Spec:opt,Args:-opt
     {
       my $args = ["cmd", "-opt"];
       
@@ -160,7 +184,7 @@ class TestCase::Getopt::Long {
       }
     }
     
-    # Spec:opt|o,Options:-opt
+    # Spec:opt|o,Args:-opt
     {
       my $args = ["cmd", "-opt"];
       
@@ -187,7 +211,7 @@ class TestCase::Getopt::Long {
       }
     }
     
-    # Spec:opt|o,Options:--opt
+    # Spec:opt|o,Args:--opt
     {
       my $args = ["cmd", "--opt"];
       
@@ -214,7 +238,7 @@ class TestCase::Getopt::Long {
       }
     }
     
-    # Spec:opt|o,Options:-o
+    # Spec:opt|o,Args:-o
     {
       my $args = ["cmd", "-o"];
       
@@ -241,7 +265,7 @@ class TestCase::Getopt::Long {
       }
     }
     
-    # Spec:opt|o|p,Options:-p
+    # Spec:opt|o|p,Args:-p
     {
       my $args = ["cmd", "-p"];
       

@@ -129,14 +129,22 @@ class Getopt::Long {
           if ($found_spec) {
             my $primary_name = $found_spec->{primary_name};
             
-            unless ($option_value) {
-              if ($args_index + 1 < $args_length) {
-                $option_value = $args->[$args_index + 1];
+            if ($found_spec->{type} == Getopt::Long::Spec->TYPE_BOOL) {
+              if (length $option_value) {
+                die "A bool type option cannot have the value.";
               }
             }
-            
-            unless ($option_value) {
-              die "The value of the option \"$option_name\" is not found.";
+            else {
+              unless (length $option_value) {
+                if ($args_index + 1 < $args_length) {
+                  $args_index++;
+                  $option_value = $args->[$args_index];
+                }
+              }
+              
+              unless (length $option_value) {
+                die "Options other than thg bool type must have its value.";
+              }
             }
             
             my $value = $values_h->get($primary_name);
