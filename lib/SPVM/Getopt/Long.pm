@@ -17,7 +17,7 @@ The Getopt::Long class of L<SPVM> has methods to parse command line options.
   use Getopt::Long;
   use Hash;
   
-  my $argv = CommandLineInfo->ARGV;
+  my $comand_args = CommandLineInfo->ARGV;
   
   my $values_h = Hash->new(
     data => "file.dat",
@@ -26,38 +26,38 @@ The Getopt::Long class of L<SPVM> has methods to parse command line options.
     numbers => new Int[0],
   );
   
-  my $rule_strings = [
+  my $spec_strings = [
     "length=i",
     "file=s",
     "verbose"
     "number=i@",
   ];
   
-  $argv = Getopt::Long->GetOptions($argv, $values_h, $rule_strings);
+  $comand_args = Getopt::Long->GetOptions($comand_args, $values_h, $spec_strings);
 
 =head1 Class Methods
 
 =head2 GetOptionsFromArray
 
-C<static method GetOptionsFromArray : string[] ($argv : string[], $values_h : Hash, $rule_strings : string[]);>
+C<static method GetOptionsFromArray : string[] ($args : string[], $values_h : Hash, $spec_strings : string[]);>
 
-Parses command line options $argv using the rules $rule_strings.
+Parses command line options $args using the option specifiction $spec_strings.
 
-In arguments $argv, a string starting with C<--> or C<-> is interpreted as the start of an option name.
+In arguments $args, a string starting with C<--> or C<-> is interpreted as the start of an option name.
 
 If the option name contains C<=>, the string after C<=> is the value of the option in the string, L<Int|SPVM::Int>, L<Double|SPVM::Double> types.
 
-If the option name do not contains C<=>, the next string of $argv is the value of the option in the string, L<Int|SPVM::Int>, L<Double|SPVM::Double> types.
+If the option name do not contains C<=>, the next string of $args is the value of the option in the string, L<Int|SPVM::Int>, L<Double|SPVM::Double> types.
 
-If C<@> is not given in the rule, the parsed value is set to $values_h with the primary option name.
+If C<@> is not given in the spec, the parsed value is set to $values_h with the primary option name.
 
-If C<@> is given in the rule, the parsed value is added to $values_h with the primary option name at the end.
+If C<@> is given in the spec, the parsed value is added to $values_h with the primary option name at the end.
 
 And returns a new command line arguments that parsed command line arguments are removed.
 
-Rule Syntax (defined by yacc syntax):
+Spec Syntax (defined by yacc syntax):
 
-  rule_string
+  spec_string
     : option_names
     | option_names '=' type
     | option_names '=' type is_array
@@ -87,7 +87,7 @@ The type C<f> means the L<Double|SPVM::Double> type.
 
 If a type is not given, the type is a boolean type. The set value is an L<Int|SPVM::Int> object with the value field set to 1.
 
-Rule aExamples:
+Option Specifiction Examples:
   
   "type=s"
   

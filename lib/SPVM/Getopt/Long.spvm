@@ -10,7 +10,7 @@ class Getopt::Long {
   use StringList;
   use Getopt::Long::Spec;
   
-  static method GetOptionsFromArray : string[] ($argv : string[], $values_h : Hash, $spec_strings : string[]) {
+  static method GetOptionsFromArray : string[] ($args : string[], $values_h : Hash, $spec_strings : string[]) {
     
     unless ($values_h) {
       die "\$values_h must be defined.";
@@ -18,9 +18,9 @@ class Getopt::Long {
     
     my $specs_h = &parse_spec_strings($spec_strings);
     
-    my $new_argv = &parse_argv($argv, $values_h, $specs_h);
+    my $new_args = &parse_args($args, $values_h, $specs_h);
     
-    return $new_argv;
+    return $new_args;
   }
   
   private static method parse_spec_strings : Hash of Getopt::Long::Spec ($spec_strings : string[]) {
@@ -32,7 +32,7 @@ class Getopt::Long {
     for (my $i = 0; $i < $spec_strings_length; $i++) {
       my $spec_string = $spec_strings->[$i];
       
-      my $spec_re = Regex->new("^(\w+(?:\|\w+))*(?:=([\w])(\@)?)?$");
+      my $spec_re = Regex->new("^(\w+(?:\|\w+)*)(?:=([\w])(\@)?)?$");
       
       if (my $match = $spec_re->match($spec_string)) {
         my $names_str = $match->cap1;
@@ -41,12 +41,13 @@ class Getopt::Long {
         
         my $names = Fn->split("|", $names_str);
         
-        unless ($type_char eq "s" || $type_char eq "i" || $type_char eq "f") {
-          die "The type \"$type_char\" in the spec is not available.";
+        if (length $type_char) {
+          unless ($type_char eq "s" || $type_char eq "i" || $type_char eq "f") {
+            die "The type \"$type_char\" in the spec is not available.";
+          }
         }
         
         my $spec = Getopt::Long::Spec->new;
-        
         my $is_primary_name = 1;
         
         for my $name (@$names) {
@@ -96,36 +97,34 @@ class Getopt::Long {
     return $specs_h;
   }
   
-  private static method parse_argv : string[] ($argv : string[], $values_h : Hash, $specs_h : Hash of Getopt::Long::Spec) {
-    my $new_argv_list = StringList->new;
+  private static method parse_args : string[] ($args : string[], $values_h : Hash, $specs_h : Hash of Getopt::Long::Spec) {
     
-    my $argv_length = @$argv;
+    my $new_args_list = StringList->new;
     
-    my $parse_start = 1;
+    my $args_length = @$args;
     
-    for (my $argv_index = 0; $argv_index < $argv_length; $argv_index++) {
-      my $argv = $argv->[$argv_index];
+    my $options_end_index = -1;
+    
+    for (my $args_index = 0; $args_index < $args_length; $args_index++) {
+      my $arg = $args->[$args_index];
       
-      my $argv_number = $argv_index + 1;
+      my $args_number = $args_index + 1;
       
-      if ($parse_start) {
-        
-        unless ($argv) {
-          die "The ${argv_number}th argument of $argv must be defined.";
-        }
-        
-        my $is_option_start = 0;
-        
-        my $option_start_re = Regex->new("^--?");
-        
-        if ($argv eq "--") {
-          $parse_start = 0;
-          next;
+      unless ($arg) {
+        die "The ${args_number}th argument of $arg must be defined.";
+      }
+      
+      my $option_start_re = Regex->new("^--?");
+      
+      if (my $match = $option_start_re->match($arg)) {
+        if ($arg eq "--") {
+          $options_end_index = $args_index + 1;
+          last;
         }
         
         my $option_re = Regex->new("--?(\w+)(?:=([\w\.\-]+))?");
         
-        if (my $match = $option_re->match($argv)) {
+        if (my $match = $option_re->match($arg)) {
           
           my $option_name = $match->cap1;
           
@@ -141,8 +140,8 @@ class Getopt::Long {
             }
             else {
               unless ($option_value) {
-                if ($argv_index + 1 < $argv_length) {
-                  $option_value = $argv->[$argv_index + 1];
+                if ($args_index + 1 < $args_length) {
+                  $option_value = $args->[$args_index + 1];
                 }
               }
               
@@ -202,17 +201,23 @@ class Getopt::Long {
           }
         }
         else {
-          die "The option \"$argv\" is an invalid format.";
+          die "The option \"$arg\" is an invalid format.";
         }
       }
       else {
-        $new_argv_list->push($argv);
+        $new_args_list->push($arg);
       }
     }
     
-    my $new_argv = $new_argv_list->to_array;
+    if ($options_end_index >= 0) {
+      for (my $args_index = $options_end_index; $args_index < $args_length; $args_index++) {
+        $new_args_list->push($args->[$args_index]);
+      }
+    }
     
-    return $new_argv;
+    my $new_args = $new_args_list->to_array;
+    
+    return $new_args;
   }
   
   # use Getopt::Long qw(:config posix_default no_ignore_case gnu_compat);
