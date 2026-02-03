@@ -2,7 +2,7 @@
 # MIT License
 
 class Getopt::Long {
-  version "0.003";
+  version "0.004";
   
   use Array;
   use Re;
